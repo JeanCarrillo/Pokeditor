@@ -106,7 +106,8 @@ class App extends Component {
                     [
                     {row.map((tileId, colIndex) =>
                       <th key={colIndex}>
-                        "{tileId}", 
+                        "{tileId}"
+                        {colIndex < this.state.labyrinth[rowIndex].length - 1 && ","} 
                       </th>
                     )}
                     {rowIndex < this.state.labyrinth.length- 1 ? "],": "]]"}
