@@ -18,7 +18,11 @@ class App extends Component {
         ["008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008"],
         ["008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008"]
       ],
-      selectedTile: "000"
+      selectedTile: "000",
+      playerOneX: 0,
+      playerOneY: 0,
+      playerTwoX: 0,
+      playerTwoY: 0
     }
     this.selectTile = this.selectTile.bind(this)
     this.changeTile = this.changeTile.bind(this)
@@ -34,6 +38,14 @@ class App extends Component {
   }
 
   changeTile = (rowIndex, colIndex) => () => {
+    if (this.state.selectedTile === 'p1') {
+      this.setState({ playerOneX: rowIndex, playerOneY: colIndex })
+      return
+    }
+    if (this.state.selectedTile === 'p2') {
+      this.setState({ playerTwoX: rowIndex, playerTwoY: colIndex })
+      return
+    }
     let labyrinth = [...this.state.labyrinth]
     labyrinth[rowIndex][colIndex] = this.state.selectedTile
     this.setState({ labyrinth })
@@ -44,7 +56,7 @@ class App extends Component {
       <div className="App">
         <h1>Pokeditor</h1>
 
-        <div style={{ marginBottom: '20px' }}>
+        <div style={{ marginBottom: '5px' }}>
           <p style={{ float: 'left', marginRight: '5px', textDecoration: "underline" }}>Choose your tile : </p>
           <div>
             {
@@ -64,6 +76,34 @@ class App extends Component {
           </div>
         </div>
 
+        <div>
+          <p style={{ float: 'left', marginRight: '5px', textDecoration: "underline" }}>Starting point : </p>
+          <div>
+            <p>Player 1
+            <button
+                style={{
+                  background: `url("./assets/characters/charBottom.png"), url("./assets/tiles/008.png")`,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center'
+                }}
+                className="Tile"
+                value="p1"
+                onClick={(event) => this.selectTile(event)}
+              />
+              Player 2
+            <button
+                style={{
+                  backgroundImage: `url("./assets/characters/charLeft.png"), url("./assets/tiles/008.png")`,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center'
+                }}
+                className="Tile"
+                value="p2"
+                onClick={(event) => this.selectTile(event)}
+              />
+            </p>
+          </div>
+        </div>
 
 
         <div className="Board">
@@ -75,9 +115,25 @@ class App extends Component {
                     {row.map((tileId, colIndex) =>
                       <th key={colIndex}>
                         <button
+                          // Display Players, I hope you enjoy spaghettis
                           style={{
-                            backgroundImage: `url(${"./assets/tiles/" + tileId + ".png"})`,
+                            backgroundImage:
+                              (
+                                (
+                                  ((rowIndex === this.state.playerOneX && colIndex === this.state.playerOneY) || (rowIndex === this.state.playerTwoX && colIndex === this.state.playerTwoY)) ?
+                                    ((rowIndex === this.state.playerOneX && colIndex === this.state.playerOneY) ?
+                                      `url('./assets/characters/charBottom.png'), url(${"./assets/tiles/" + tileId + ".png"})`
+                                      : ((rowIndex === this.state.playerTwoX && colIndex === this.state.playerTwoY) ?
+                                        `url('./assets/characters/charLeft.png'), url(${"./assets/tiles/" + tileId + ".png"})`
+                                        : `url(${"./assets/tiles/" + tileId + ".png"})`
+                                      ))
+                                    : `url(${"./assets/tiles/" + tileId + ".png"})`
+                                )
+                              ),
+                            backgroundRepeat: 'no-repeat, no-repeat',
+                            backgroundPosition: 'center, center'
                           }}
+
                           className="Tile"
                           value={tileId}
                           onClick={this.changeTile(rowIndex, colIndex)}
@@ -114,7 +170,14 @@ class App extends Component {
               ))
             }
           </div>
+          <p style={{ textDecoration: "underline" }}>Players starting coordinates :</p>
+          <p style={{ fontSize: "0.9em", lineHeight: "0.3em" }}>Player 1: {this.state.playerOneX}, {this.state.playerOneY}</p>
+          <p style={{ fontSize: "0.9em", lineHeight: "0.3em" }}>Player 2: {this.state.playerTwoX}, {this.state.playerTwoY}</p>
         </div>
+
+
+
+
       </div>
     )
   }
