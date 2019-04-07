@@ -97,25 +97,22 @@ class App extends Component {
 
         <div>
         <p style={{textDecoration:"underline"}}>Matrix :</p>
-          <table style={{fontSize:"0.9em"}}>
-            <tbody>
+          <div style={{fontSize:"0.8em", lineHeight:"0.3em"}}>
               {
                 this.state.labyrinth.map((row, rowIndex) => (
-                  <tr key={rowIndex}>
-                  {rowIndex === 0 && "["}
-                    [
+                  <p key={rowIndex}>
+                  {rowIndex === 0 && "["}[
                     {row.map((tileId, colIndex) =>
-                      <th key={colIndex}>
+                      <span key={colIndex}>
                         "{tileId}"
                         {colIndex < this.state.labyrinth[rowIndex].length - 1 && ","} 
-                      </th>
+                      </span>
                     )}
                     {rowIndex < this.state.labyrinth.length- 1 ? "],": "]]"}
-                  </tr>
+                  </p>
                 ))
               }
-            </tbody>
-          </table>
+          </div>
         </div>
       </div>
     )
