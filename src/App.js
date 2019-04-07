@@ -5,7 +5,7 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-  //    TO DO : add a way to modify/write a json file
+      //    TO DO : add a way to modify/write a json file
       labyrinth: [
         ["008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008"],
         ["008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008"],
@@ -33,19 +33,19 @@ class App extends Component {
     this.setState({ selectedTile: event.target.value })
   }
 
-  changeTile = (rowIndex, colIndex) => () =>{
+  changeTile = (rowIndex, colIndex) => () => {
     let labyrinth = [...this.state.labyrinth]
     labyrinth[rowIndex][colIndex] = this.state.selectedTile
-    this.setState({labyrinth})
+    this.setState({ labyrinth })
   }
 
   render() {
     return (
       <div className="App">
         <h1>Pokeditor</h1>
-        <div style={{ marginBottom: '20px' }}>
-          <p style={{ float: 'left', marginRight: '5px',textDecoration:"underline"}}>Choose your tile : </p>
 
+        <div style={{ marginBottom: '20px' }}>
+          <p style={{ float: 'left', marginRight: '5px', textDecoration: "underline" }}>Choose your tile : </p>
           <div>
             {
               this.files.map((file, index) => (
@@ -62,10 +62,10 @@ class App extends Component {
               ))
             }
           </div>
-
-
-
         </div>
+
+
+
         <div className="Board">
           <table>
             <tbody>
@@ -83,7 +83,7 @@ class App extends Component {
                           onClick={this.changeTile(rowIndex, colIndex)}
                         />
                         {
-                       
+
                         }
                       </th>
                     )}
@@ -95,23 +95,24 @@ class App extends Component {
         </div>
 
 
+
         <div>
-        <p style={{textDecoration:"underline"}}>Matrix :</p>
-          <div style={{fontSize:"0.8em", lineHeight:"0.3em"}}>
-              {
-                this.state.labyrinth.map((row, rowIndex) => (
-                  <p key={rowIndex}>
+          <p style={{ textDecoration: "underline" }}>Matrix :</p>
+          <div style={{ fontSize: "0.8em", lineHeight: "0.3em" }}>
+            {
+              this.state.labyrinth.map((row, rowIndex) => (
+                <p key={rowIndex}>
                   {rowIndex === 0 && "["}[
                     {row.map((tileId, colIndex) =>
-                      <span key={colIndex}>
-                        "{tileId}"
-                        {colIndex < this.state.labyrinth[rowIndex].length - 1 && ","} 
-                      </span>
-                    )}
-                    {rowIndex < this.state.labyrinth.length- 1 ? "],": "]]"}
-                  </p>
-                ))
-              }
+                    <span key={colIndex}>
+                      "{tileId}"
+                        {colIndex < this.state.labyrinth[rowIndex].length - 1 && ","}
+                    </span>
+                  )}
+                  {rowIndex < this.state.labyrinth.length - 1 ? "]," : "]]"}
+                </p>
+              ))
+            }
           </div>
         </div>
       </div>
