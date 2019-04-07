@@ -19,10 +19,10 @@ class App extends Component {
         ["008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008"]
       ],
       selectedTile: "000",
-      playerOneX: 0,
-      playerOneY: 0,
-      playerTwoX: 0,
-      playerTwoY: 0
+      playerOneX: null,
+      playerOneY: null,
+      playerTwoX: null,
+      playerTwoY: null
     }
     this.selectTile = this.selectTile.bind(this)
     this.changeTile = this.changeTile.bind(this)
