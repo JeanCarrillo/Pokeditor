@@ -18,37 +18,63 @@ class App extends Component {
         ["008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008"],
         ["008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008"]
       ],
-      selectedTile: "000",
+      items: [
+        ["000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000"],
+        ["000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000"],
+        ["000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000"],
+        ["000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000"],
+        ["000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000"],
+        ["000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000"],
+        ["000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000"],
+        ["000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000"],
+        ["000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000"],
+        ["000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000"]
+      ],
+      selectedTile: null,
+      selectedItem: null,
       playerOneX: null,
       playerOneY: null,
       playerTwoX: null,
       playerTwoY: null
     }
     this.selectTile = this.selectTile.bind(this)
+    this.selectItem = this.selectItem.bind(this)
     this.changeTile = this.changeTile.bind(this)
   }
   //    TO DO : add a way to get file list from assets/tiles folder...
   //    ADD YOUR TILES HERE
-  files = ["000", "002", "003", "004", "005", "006", "007", "008", "010", "015",
+  tiles = ["000", "002", "003", "004", "005", "006", "007", "008", "010", "015",
     "016", "017", "018", "018", "019", "020", "021", "022", "023", "024", "500",
     "501", "502", "503", "504", "505"]
+  //    ADD YOUR ITEMS HERE
+  items = ["000", "001", "002", "003"]
 
   selectTile(event) {
-    this.setState({ selectedTile: event.target.value })
+    this.setState({ selectedTile: event.target.value, selectedItem: null })
+  }
+  selectItem(event) {
+    this.setState({ selectedItem: event.target.value, selectedTile: null })
   }
 
   changeTile = (rowIndex, colIndex) => () => {
-    if (this.state.selectedTile === 'p1') {
-      this.setState({ playerOneX: rowIndex, playerOneY: colIndex })
-      return
+    if (this.state.selectedTile !== null) {
+      if (this.state.selectedTile === 'p1') {
+        this.setState({ playerOneX: rowIndex, playerOneY: colIndex })
+        return
+      }
+      if (this.state.selectedTile === 'p2') {
+        this.setState({ playerTwoX: rowIndex, playerTwoY: colIndex })
+        return
+      }
+      let labyrinth = [...this.state.labyrinth]
+      labyrinth[rowIndex][colIndex] = this.state.selectedTile
+      this.setState({ labyrinth })
     }
-    if (this.state.selectedTile === 'p2') {
-      this.setState({ playerTwoX: rowIndex, playerTwoY: colIndex })
-      return
+    if (this.state.selectedItem !== null) {
+      let items = [...this.state.items]
+      items[rowIndex][colIndex] = this.state.selectedItem
+      this.setState({ items })
     }
-    let labyrinth = [...this.state.labyrinth]
-    labyrinth[rowIndex][colIndex] = this.state.selectedTile
-    this.setState({ labyrinth })
   }
 
   render() {
@@ -57,19 +83,39 @@ class App extends Component {
         <h1>Pokeditor</h1>
 
         <div style={{ marginBottom: '5px' }}>
-          <p style={{ float: 'left', marginRight: '5px', textDecoration: "underline" }}>Choose your tile : </p>
+          <p style={{ float: 'left', marginRight: '5px', textDecoration: "underline" }}>Choose tile : </p>
           <div>
             {
-              this.files.map((file, index) => (
+              this.tiles.map((file, index) => (
                 <button
                   style={{
-                    backgroundImage: `url(${"./assets/tiles/" + this.files[index] + ".png"})`,
+                    backgroundImage: `url(${"./assets/tiles/" + this.tiles[index] + ".png"})`,
                     marginRight: '3px'
                   }}
                   className="Tile"
                   value={file}
                   key={index}
                   onClick={(event) => this.selectTile(event)}
+                />
+              ))
+            }
+          </div>
+        </div>
+
+        <div style={{ marginBottom: '5px' }}>
+          <p style={{ float: 'left', marginRight: '5px', textDecoration: "underline" }}>Choose item : </p>
+          <div>
+            {
+              this.items.map((item, index) => (
+                <button
+                  style={{
+                    backgroundImage: `url(${"./assets/items/" + this.items[index] + ".png"})`,
+                    marginRight: '3px'
+                  }}
+                  className="Tile"
+                  value={item}
+                  key={index}
+                  onClick={(event) => this.selectItem(event)}
                 />
               ))
             }
@@ -138,9 +184,6 @@ class App extends Component {
                           value={tileId}
                           onClick={this.changeTile(rowIndex, colIndex)}
                         />
-                        {
-
-                        }
                       </th>
                     )}
                   </tr>
@@ -153,7 +196,7 @@ class App extends Component {
 
 
         <div>
-          <p style={{ textDecoration: "underline" }}>Matrix :</p>
+          <p style={{ textDecoration: "underline" }}>Tiles matrix :</p>
           <div style={{ fontSize: "0.8em", lineHeight: "0.3em" }}>
             {
               this.state.labyrinth.map((row, rowIndex) => (
@@ -166,6 +209,23 @@ class App extends Component {
                     </span>
                   )}
                   {rowIndex < this.state.labyrinth.length - 1 ? "]," : "]]"}
+                </p>
+              ))
+            }
+          </div>
+          <p style={{ textDecoration: "underline" }}>Items matrix :</p>
+          <div style={{ fontSize: "0.8em", lineHeight: "0.3em" }}>
+            {
+              this.state.items.map((row, rowIndex) => (
+                <p key={rowIndex}>
+                  {rowIndex === 0 && "["}[
+                    {row.map((tileId, colIndex) =>
+                    <span key={colIndex}>
+                      "{tileId}"
+                        {colIndex < this.state.items[rowIndex].length - 1 && ","}
+                    </span>
+                  )}
+                  {rowIndex < this.state.items.length - 1 ? "]," : "]]"}
                 </p>
               ))
             }
