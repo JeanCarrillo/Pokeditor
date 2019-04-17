@@ -1,12 +1,20 @@
 import React, { Component } from 'react';
+import PokeditorChooseTile from './PokeditorChooseTile';
+import PokeditorChooseItem from './PokeditorChooseItem';
+import PokeditorChooseStartingPoint from './PokeditorChooseStartingPoint';
+import PokeditorChooseSize from './PokeditorChooseSize';
+import PokeditorBoard from './PokeditorBoard';
+import PokeditorMatrix from './PokeditorMatrix';
 import './Pokeditor.css';
 
 class Pokeditor extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      //    TO DO : add a way to modify/write a json file
-      labyrinth: [
+      // TO DO : add a way to modify/write a json file
+      // TO DO: select/edit existing levels
+      // TO DO: save the level (local storage?)
+      level: [
         ["008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008"],
         ["008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008"],
         ["008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008", "008"],
@@ -35,28 +43,28 @@ class Pokeditor extends Component {
       playerOneX: null,
       playerOneY: null,
       playerTwoX: null,
-      playerTwoY: null
+      playerTwoY: null,
+      timer: 60,
     }
-    this.selectTile = this.selectTile.bind(this)
-    this.selectItem = this.selectItem.bind(this)
     this.changeTile = this.changeTile.bind(this)
   }
   //    TO DO : add a way to get file list from assets/tiles folder...
   //    ADD YOUR TILES HERE
-  tiles = ["000", "002", "003", "004", "005", "006", "007", "008", "010", "015","016", 
-    "017", "018", "018", "019", "020", "021", "022", "023", "024", "025", "026", "027", 
+  tiles = ["000", "001", "002", "003", "004", "005", "006", "007", "008", "009", "010", "015", "016",
+    "017", "018", "018", "019", "020", "021", "022", "023", "024", "025", "026", "027",
     "028", "029", "030", "031", "032", "033", "034", "035", "036", "037", "038", "039",
-    "040", "041", "042", "043", "044", "045", "046", "047", "048", "049", "050", "051", 
-    "052", "053", "054", "055", "056", "057", "058", "059", "500", "501", "502", "503", 
-    "504", "505", "510", "511", "512", "513", "514", "515", "516", "517", "518", "519", 
-    "520", "521", "522", "523"]
+    "040", "041", "042", "043", "044", "045", "046", "047", "048", "049", "050", "051",
+    "052", "053", "054", "055", "056", "057", "058", "059", "500", "501", "502", "503",
+    "504", "505", "510", "511", "512", "513", "514", "515", "518", "519", "520", "521", "522", "523",
+    "524", "525", "526"]
   //    ADD YOUR ITEMS HERE
-  items = ["000", "001", "002", "003"]
+  items = ["000", "001", "002", "700", "701", "800", "801", "900"]
 
-  selectTile(event) {
+  selectTile = (event) => {
     this.setState({ selectedTile: event.target.value, selectedItem: null })
   }
-  selectItem(event) {
+
+  selectItem = (event) => {
     this.setState({ selectedItem: event.target.value, selectedTile: null })
   }
 
@@ -70,9 +78,9 @@ class Pokeditor extends Component {
         this.setState({ playerTwoX: rowIndex, playerTwoY: colIndex })
         return
       }
-      let labyrinth = [...this.state.labyrinth]
-      labyrinth[rowIndex][colIndex] = this.state.selectedTile
-      this.setState({ labyrinth })
+      let level = [...this.state.level]
+      level[rowIndex][colIndex] = this.state.selectedTile
+      this.setState({ level })
     }
     if (this.state.selectedItem !== null) {
       let items = [...this.state.items]
@@ -81,172 +89,59 @@ class Pokeditor extends Component {
     }
   }
 
+  changeSize = (x, y) => {
+    const newLevel = [];
+    for (let i = 0; i < y; i += 1){
+      newLevel.push([])
+      for (let j = 0; j < x; j += 1){
+        newLevel[i].push('008')
+      }
+    }
+    const newItemMatrix = [];
+    for (let i = 0; i < y; i += 1){
+      newItemMatrix.push([])
+      for (let j = 0; j < x; j += 1){
+        newItemMatrix[i].push('000')
+      }
+    }
+    this.setState({
+      level: newLevel,
+      items: newItemMatrix,
+      playerOneX: null,
+      playerOneY: null,
+      playerTwoX: null,
+      playerTwoY: null,
+      timer: 60,
+    })
+  }
+
   render() {
+    const { level, items, playerOneX, playerOneY, playerTwoX, playerTwoY, timer } = this.state;
     return (
-      <div className="App">
+      <div className="Pokeditor">
         <h1>Pokeditor</h1>
-
-        <div style={{ marginBottom: '5px' }}>
-          <p style={{ float: 'left', marginRight: '5px', textDecoration: "underline" }}>Choose tile : </p>
-          <div>
-            {
-              this.tiles.map((file, index) => (
-                <button
-                  style={{
-                    backgroundImage: `url(${"./assets/tiles/" + this.tiles[index] + ".png"})`,
-                    marginRight: '3px'
-                  }}
-                  className="Tile"
-                  value={file}
-                  key={index}
-                  onClick={(event) => this.selectTile(event)}
-                />
-              ))
-            }
-          </div>
-        </div>
-
-        <div style={{ marginBottom: '5px' }}>
-          <p style={{ float: 'left', marginRight: '5px', textDecoration: "underline" }}>Choose item : </p>
-          <div>
-            {
-              this.items.map((item, index) => (
-                <button
-                  style={{
-                    backgroundImage: `url(${"./assets/items/" + this.items[index] + ".png"})`,
-                    marginRight: '3px'
-                  }}
-                  className="Tile"
-                  value={item}
-                  key={index}
-                  onClick={(event) => this.selectItem(event)}
-                />
-              ))
-            }
-          </div>
-        </div>
-
-        <div>
-          <p style={{ float: 'left', marginRight: '5px', textDecoration: "underline" }}>Starting point : </p>
-          <div>
-            <p>Player 1
-            <button
-                style={{
-                  background: `url("./assets/characters/charBottom.png"), url("./assets/tiles/008.png")`,
-                  backgroundRepeat: 'no-repeat',
-                  backgroundPosition: 'center'
-                }}
-                className="Tile"
-                value="p1"
-                onClick={(event) => this.selectTile(event)}
-              />
-              Player 2
-            <button
-                style={{
-                  backgroundImage: `url("./assets/characters/charLeft.png"), url("./assets/tiles/008.png")`,
-                  backgroundRepeat: 'no-repeat',
-                  backgroundPosition: 'center'
-                }}
-                className="Tile"
-                value="p2"
-                onClick={(event) => this.selectTile(event)}
-              />
-            </p>
-          </div>
-        </div>
-
-
-        <div className="Board">
-          <table>
-            <tbody>
-              {
-                this.state.labyrinth.map((row, rowIndex) => (
-                  <tr key={rowIndex}>
-                    {row.map((tileId, colIndex) =>
-                      <th key={colIndex}>
-                        <button
-                          // Display Players, I hope you enjoy spaghettis
-                          style={{
-                            backgroundImage:
-                              (
-                                (
-                                  ((rowIndex === this.state.playerOneX && colIndex === this.state.playerOneY) || (rowIndex === this.state.playerTwoX && colIndex === this.state.playerTwoY)) ?
-                                    ((rowIndex === this.state.playerOneX && colIndex === this.state.playerOneY) ?
-                                      `url('./assets/characters/charBottom.png'), url(${"./assets/tiles/" + tileId + ".png"})`
-                                      : ((rowIndex === this.state.playerTwoX && colIndex === this.state.playerTwoY) ?
-                                        `url('./assets/characters/charLeft.png'), url(${"./assets/tiles/" + tileId + ".png"})`
-                                        : `url(${"./assets/tiles/" + tileId + ".png"})`
-                                      ))
-                                    : `url(${"./assets/tiles/" + tileId + ".png"})`
-                                )
-                              ),
-                            backgroundRepeat: 'no-repeat, no-repeat',
-                            backgroundPosition: 'center, center'
-                          }}
-
-                          className="Tile"
-                          value={tileId}
-                          onClick={this.changeTile(rowIndex, colIndex)}
-                        >
-
-                        {
-                          this.state.items[rowIndex][colIndex] !== '000' ?
-                          <img alt="Item" className="Item" src={"./assets/items/"+ this.state.items[rowIndex][colIndex] +".png"} />
-                          : <span></span>
-
-                        }
-                        </button>
-                      </th>
-                    )}
-                  </tr>
-                ))
-              }
-            </tbody>
-          </table>
-        </div>
-
-
-
-        <div>
-          <p style={{ textDecoration: "underline" }}>Tiles matrix :</p>
-          <div style={{ fontSize: "0.8em", lineHeight: "0.3em" }}>
-            {
-              this.state.labyrinth.map((row, rowIndex) => (
-                <p key={rowIndex}>
-                  {rowIndex === 0 && "["}[
-                    {row.map((tileId, colIndex) =>
-                    <span key={colIndex}>
-                      "{tileId}"
-                        {colIndex < this.state.labyrinth[rowIndex].length - 1 && ","}
-                    </span>
-                  )}
-                  {rowIndex < this.state.labyrinth.length - 1 ? "]," : "]]"}
-                </p>
-              ))
-            }
-          </div>
-          <p style={{ textDecoration: "underline" }}>Items matrix :</p>
-          <div style={{ fontSize: "0.8em", lineHeight: "0.3em" }}>
-            {
-              this.state.items.map((row, rowIndex) => (
-                <p key={rowIndex}>
-                  {rowIndex === 0 && "["}[
-                    {row.map((tileId, colIndex) =>
-                    <span key={colIndex}>
-                      "{tileId}"
-                        {colIndex < this.state.items[rowIndex].length - 1 && ","}
-                    </span>
-                  )}
-                  {rowIndex < this.state.items.length - 1 ? "]," : "]]"}
-                </p>
-              ))
-            }
-          </div>
-          <p style={{ textDecoration: "underline" }}>Players starting coordinates :</p>
-          <p style={{ fontSize: "0.9em", lineHeight: "0.3em" }}>Player 1: {this.state.playerOneX}, {this.state.playerOneY}</p>
-          <p style={{ fontSize: "0.9em", lineHeight: "0.3em" }}>Player 2: {this.state.playerTwoX}, {this.state.playerTwoY}</p>
-        </div>
-
+        <PokeditorChooseSize changeSize={this.changeSize} x="10" y="10"/>
+        <PokeditorChooseTile tiles={this.tiles} selectTile={this.selectTile} />
+        <PokeditorChooseItem items={this.items} selectItem={this.selectItem} />
+        <PokeditorChooseStartingPoint selectTile={this.selectTile} />
+        <PokeditorBoard
+          level={level}
+          items={items}
+          changeTile={this.changeTile}
+          playerOneX={playerOneX}
+          playerOneY={playerOneY}
+          playerTwoX={playerTwoX}
+          playerTwoY={playerTwoY}
+        />
+        <PokeditorMatrix
+          level={level}
+          items={items}
+          playerOneX={playerOneX}
+          playerOneY={playerOneY}
+          playerTwoX={playerTwoX}
+          playerTwoY={playerTwoY}
+          timer={timer}
+        />
       </div>
     )
   }
