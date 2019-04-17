@@ -8,7 +8,7 @@ class PokeditorChooseStartingPoint extends Component {
         <p style={{ float: 'left', marginRight: '5px', textDecoration: "underline" }}>Starting point : </p>
         <div>
           <p>Player 1
-        <button
+            <button
               style={{
                 background: `url("./assets/characters/charBottom.png"), url("./assets/tiles/008.png")`,
                 backgroundRepeat: 'no-repeat',
@@ -19,7 +19,7 @@ class PokeditorChooseStartingPoint extends Component {
               onClick={selectTile}
             />
             Player 2
-        <button
+            <button
               style={{
                 backgroundImage: `url("./assets/characters/charLeft.png"), url("./assets/tiles/008.png")`,
                 backgroundRepeat: 'no-repeat',
@@ -27,7 +27,7 @@ class PokeditorChooseStartingPoint extends Component {
               }}
               className="Tile"
               value="p2"
-              onClick={this.selectTile}
+              onClick={selectTile}
             />
           </p>
         </div>

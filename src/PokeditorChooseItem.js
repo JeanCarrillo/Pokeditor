@@ -12,7 +12,8 @@ class PokeditorChooseItem extends Component {
               <button
                 style={{
                   backgroundImage: `url(${"./assets/items/" + items[index] + ".png"})`,
-                  marginRight: '3px'
+                  marginRight: '3px',
+                  backgroundRepeat: 'no-repeat',
                 }}
                 className="Tile"
                 value={item}
